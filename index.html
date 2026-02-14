@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Ghina ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Pacifico&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-dark: #ff4d6d;
+            --pink-light: #ffafbd;
+            --bg-color: #fae1dd;
+        }
+
+        body {
+            margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center;
+            background-color: var(--bg-color); font-family: 'Quicksand', sans-serif; overflow-x: hidden;
+        }
+
+        #heartCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+        /* 1. TYPEWRITER */
+        #typewriter-container { font-family: 'Pacifico', cursive; font-size: 2.2rem; color: #d62828; z-index: 20; text-align: center; padding: 20px; }
+
+        /* 2. ENVELOPE */
+        #envelope-wrapper { display: none; position: relative; z-index: 40; text-align: center; }
+        .valentines { position: relative; cursor: pointer; animation: up 3s linear infinite; margin-bottom: 20px; width: 300px; margin-left: auto; margin-right: auto; }
+        @keyframes up { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        
+        .envelope { position: relative; width: 300px; height: 200px; background-color: #f08080; }
+        .envelope:before {
+            background-color: #f08080; content: ""; position: absolute;
+            width: 212px; height: 212px; transform: rotate(45deg);
+            top: -105px; left: 44px; border-radius: 30px 0 0 0;
+            transition: 0.5s; z-index: 5;
+        }
+        
+        .valentines.open .envelope:before { transform: rotate(225deg); top: -50px; z-index: 0; }
+        
+        .card {
+            position: absolute; background-color: #eae2b7; width: 270px; height: 170px;
+            top: 5px; left: 15px; box-shadow: -5px -5px 100px rgba(0,0,0,0.4); transition: 0.8s; z-index: 2;
+        }
+        .card .text { position: absolute; font-family: 'Pacifico'; font-size: 22px; text-align: center; top: 40px; width: 100%; color: #003049; pointer-events: none; }
+        
+        .valentines.open .card { transform: translateY(-100px); }
+
+        .front { position: absolute; border-right: 180px solid #f4978e; border-top: 95px solid transparent; border-bottom: 100px solid transparent; left: 120px; top: 5px; width: 0; height: 0; z-index: 10; pointer-events: none;}
+        .front:before { position: absolute; content: ""; border-left: 300px solid #f8ad9d; border-top: 195px solid transparent; left: -120px; top: -95px; width: 0; height: 0; }
+
+        /* 3. FINAL CARD */
+        #final-card { display: none; background: white; padding: 40px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 320px; z-index: 50; }
+        .btns { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .choice { padding: 12px 25px; font-weight: bold; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        #yesBtn, #openBtn, #nextBtn { background: #d62828; color: white; }
+        #noBtn, #noThanksBtn { background: #6c757d; color: white; position: relative; }
+
+        /* 4. SUCCESS PAGE */
+        #success-page { display: none; width: 100%; max-width: 800px; text-align: center; z-index: 60; padding: 40px 20px; }
+        .polaroid-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 30px 0; perspective: 1000px; }
+        .polaroid { background: white; padding: 10px 10px 25px 10px; border-radius: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 150px; transition: 0.3s; }
+        .polaroid img { width: 100%; height: 150px; object-fit: cover; }
+        .p1 { transform: rotate(-5deg); } .p2 { transform: rotate(5deg); } .p3 { transform: rotate(-3deg); } .p4 { transform: rotate(4deg); }
+        
+        .music-container { margin: 30px auto; padding: 20px; background: rgba(255, 255, 255, 0.7); border-radius: 20px; max-width: 500px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 15px; overflow: hidden; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        /* 5. ASK OPEN LETTER */
+        #ask-letter { display: none; text-align: center; z-index: 70; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 320px; }
+
+        /* 6. FINAL LETTER */
+        #final-letter {
+            display: none; position: relative; z-index: 80; width: 90%; max-width: 500px;
+            background: #fffef0; padding: 40px; border-radius: 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            font-family: 'Dancing Script', cursive; line-height: 1.6; font-size: 1.3rem; color: #333; margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="heartCanvas"></canvas>
+    <div id="typewriter-container"></div>
+
+    <div id="envelope-wrapper">
+        <div class="valentines" id="v-envelope">
+            <div class="envelope"></div>
+            <div class="front"></div>
+            <div class="card">
+                <div class="text">Open Me! 📩</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="final-card">
+        <h2 style="font-family:'Pacifico'; color:#d62828">Will u be my valentine?</h2>
+        <div class="btns">
+            <button id="yesBtn" class="choice">Yes!</button>
+            <button id="noBtn" class="choice">No</button>
+        </div>
+    </div>
+
+    <div id="success-page">
+        <h1 style="font-family:'Pacifico'; color:#d62828">My Beautiful Girl, Ghina</h1>
+        <p>semenjak ada kamu, hidupku terasa istimewa.<br>happy valentine my favorite person!💕</p>
+        <div class="polaroid-gallery">
+            <div class="polaroid p1"><img src="https://i.ibb.co.com/NngvsXqZ/IMG-20250402-112949-293.jpg" alt="Foto 1"></div>
+            <div class="polaroid p2"><img src="https://i.ibb.co.com/Z0MLBd5/IMG-20250401-163006-064.jpg" alt="Foto 2"></div>
+            <div class="polaroid p3"><img src="https://i.ibb.co.com/M56LfQLS/IMG-20250602-WA0077.jpg" alt="Foto 3"></div>
+            <div class="polaroid p4"><img src="https://i.ibb.co.com/9mDg0L1n/IMG-20250602-WA0076-1.jpg" alt="Foto 4"></div>
+        </div>
+        
+        <div class="music-container">
+            <h2 style="font-family:'Pacifico'; color:#d62828; font-size: 2rem;">🎶 a song for u</h2>
+            <div class="video-wrapper">
+                <iframe id="music-video" src="https://www.youtube.com/embed/SXdapBpFC9I?enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <p style="font-family:'Dancing Script'; font-size:1.3rem; color:#d62828; margin-top:15px; font-weight:bold;">
+                "This song reminds me of you, Every time i listen to it,<br>I realize how much i love you."
+            </p>
+        </div>
+        <button class="choice" id="nextBtn">Next</button>
+    </div>
+
+    <div id="ask-letter">
+        <h2 style="font-family:'Pacifico'; color:#d62828">I wrote something for you...</h2>
+        <p>Do u want to open it?</p>
+        <div class="btns">
+            <button id="openBtn" class="choice">Open it</button>
+            <button id="noThanksBtn" class="choice">no, thanks.</button>
+        </div>
+        <p id="retry-msg" style="display:none; color:#d62828; margin-top:15px; font-weight:bold;">Awhh... Lets try again, Please...? :(</p>
+    </div>
+
+    <div id="final-letter">
+        <h2 style="text-align:center; color:#d62828">My dearest Ghina,</h2>
+        <p>There are things in this world that are difficult to say out loud—not because they aren't true, but because they are so deeply felt that words seem too small to carry them. This is my attempt, anyway.</p>
+        <p>I think about the way you smile when something genuinely makes you happy—how it reaches your eyes before it even reaches your lips. I think about how much lighter everything feels when you're around. I think about how I never want to stop learning who you are.</p>
+        <p>You are not just someone I care about, Ghina. You are the reason I want to be better, kinder, and more present. You are the person I look for in a crowded room. You are the first thought I have in the morning and the warmest one I carry through the day.</p>
+        <p>I know I might be more comfortable with logic and routine than with poetry—but even I know that what I feel for you is something I never want to debug or rewrite. It’s exactly right, just the way it is.</p>
+        <p style="text-align:right; font-weight:bold; margin-top:30px;">Happy Valentine’s Day, my love. ❤️</p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const msg = "hey, i wanna ask you something...";
+        let i = 0;
+        function type() {
+            if (i < msg.length) {
+                document.getElementById('typewriter-container').innerHTML += msg.charAt(i);
+                i++; setTimeout(type, 100);
+            } else {
+                setTimeout(() => { 
+                    $('#typewriter-container').fadeOut(500, () => { $('#envelope-wrapper').fadeIn(); }); 
+                }, 1000);
+            }
+        }
+        window.onload = type;
+
+        function playMusic() {
+            var frame = document.getElementById('music-video');
+            var src = frame.src;
+            if (src.indexOf('autoplay') == -1) {
+                frame.src += "&autoplay=1";
+            }
+        }
+
+        $('#v-envelope').one('click', function() {
+            $(this).addClass('open');
+            playMusic();
+            setTimeout(() => { 
+                $('#envelope-wrapper').fadeOut(800, () => { $('#final-card').fadeIn(500); });
+            }, 1800);
+        });
+
+        $('#noBtn').mouseover(function() {
+            const x = Math.random() * (window.innerWidth - $(this).width());
+            const y = Math.random() * (window.innerHeight - $(this).height());
+            $(this).css({ position: 'fixed', left: x, top: y });
+        });
+
+        $('#yesBtn').click(() => {
+            $('#final-card').fadeOut(500, () => { 
+                $('body').css('overflow-y', 'auto');
+                $('#success-page').fadeIn(); 
+            });
+        });
+
+        $('#nextBtn').click(() => {
+            window.scrollTo(0, 0);
+            $('#success-page').fadeOut(500, () => { $('#ask-letter').fadeIn(); });
+        });
+
+        // "Awhh" Message Logic
+        $('#noThanksBtn').click(() => {
+            $('#retry-msg').stop(true, true).fadeIn().delay(2000).fadeOut();
+        });
+
+        $('#openBtn').click(() => {
+            $('#ask-letter').fadeOut(500, () => { $('#final-letter').fadeIn(); });
+        });
+
+        // BG Hearts
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Heart {
+            constructor() { this.reset(); }
+            reset() { this.x = Math.random()*canvas.width; this.y = canvas.height+20; this.s = Math.random()*10+10; this.v = Math.random()*2+0.5; this.o = Math.random()*0.4; }
+            update() { this.y -= this.v; if(this.y < -20) this.reset(); }
+            draw() { ctx.globalAlpha = this.o; ctx.font = this.s+'px serif'; ctx.fillText('❤️', this.x, this.y); }
+        }
+        for(let k=0; k<20; k++) hearts.push(new Heart());
+        function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); hearts.forEach(h => { h.update(); h.draw(); }); requestAnimationFrame(animate); }
+        animate();
+    </script>
+</body>
+</html>
